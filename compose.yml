@@ -1,0 +1,42 @@
+services:
+  production-ready:
+    build: .
+    container_name: production-ready-app
+    ports:
+      - "8080:8080"
+    networks:
+      - production
+  prometheus:
+    image: ghcr.io/gabriel-jeronimo/prom-arm64:latest
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+    networks:
+      - production
+  grafana:
+    image: ghcr.io/gabriel-jeronimo/grafana-arm64
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GF_ADMIN}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_PASSWORD}
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources
+    networks:
+      - production
+
+volumes:
+  prom_data:
+
+networks:
+  production:
+    driver: bridge
