@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Properties for flexible configuration -->
+    <springProperty name="APPLICATION_NAME" source="spring.application.name" defaultValue="stocks"/>
+    <springProperty name="LOG_LEVEL" source="logging.level.root" defaultValue="INFO"/>
+    <springProperty name="LOG_PATH" source="logging.file.path" defaultValue="logs"/>
+
+    <!-- Console Appender - Human Readable with Context -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%thread] [%X{tracyeId:-},%X{spanId:-},%X{parentId:-}] %cyan(%logger{36}) %X{requestId:-} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender - Detailed Logging -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/application.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{traceId:-},%X{spanId:-},%X{parentId:-}] %logger{50} %X{requestId:-} %X{method:-} %X{uri:-} %X{statusCode:-} %X{correlationId:-} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/application.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+</configuration>

@@ -27,9 +27,7 @@ public class ProductController {
         Random gerador = new Random();
         Integer num = gerador.nextInt();
 
-        System.out.println(num);
         if (num > 50) {
-            
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
