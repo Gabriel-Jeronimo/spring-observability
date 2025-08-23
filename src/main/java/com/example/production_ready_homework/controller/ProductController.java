@@ -1,11 +1,7 @@
 package com.example.production_ready_homework.controller;
 
-import java.util.List;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +39,7 @@ public class ProductController {
         return new ResponseEntity<Product>(product, HttpStatus.CREATED);
     }
 
-    @PostMapping("/buy-products")
+    @PostMapping("/buy")
     public ResponseEntity<java.util.List<BuyProductsResponse>> buyProducts(@RequestBody BuyProductsRequest request,
             @RequestHeader long clientId) {
 

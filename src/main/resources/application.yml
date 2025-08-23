@@ -10,6 +10,8 @@ spring:
     password: password
     driverClassName: org.h2.Driver
   jpa: 
+    show-sql: true
+    hibernate.ddl-auto: create
     database-platform: org.hibernate.dialect.H2Dialect
 management:
   endpoints:

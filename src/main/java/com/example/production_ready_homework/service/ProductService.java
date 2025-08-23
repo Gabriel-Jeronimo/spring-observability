@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.production_ready_homework.dto.BuyProductsResponse;
 import com.example.production_ready_homework.dto.DummyJsonProductResponse;
+import com.example.production_ready_homework.model.Order;
 import com.example.production_ready_homework.model.Product;
+import com.example.production_ready_homework.repository.OrderRepository;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
@@ -23,6 +25,9 @@ import io.micrometer.core.instrument.Timer;
 public class ProductService {
     @Autowired
     private MeterRegistry registry;
+    @Autowired
+    private OrderRepository orderRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -31,22 +36,25 @@ public class ProductService {
     public List<BuyProductsResponse> buyProduct(List<Integer> ids, long clientId) {
         logger.info("Buy request from clientId = {}", clientId);
 
-        List<BuyProductsResponse> products = new ArrayList<>();
+        List<BuyProductsResponse> response = new ArrayList<>();
+        List<Long> products = new ArrayList<>();
         for (Integer id : ids) {
             try {
                 logger.info("Searching in API by product = {}", id);
                 Map<String, Object> request = Map.of("id", id);
-                DummyJsonProductResponse product = restTemplate.postForObject(APP_B_URL, request, DummyJsonProductResponse.class);
-                products.add(new BuyProductsResponse(product.id(), product.title()));
-            } catch(HttpClientErrorException.NotFound ex) {
+                DummyJsonProductResponse product = restTemplate.postForObject(APP_B_URL, request,
+                        DummyJsonProductResponse.class);
+                response.add(new BuyProductsResponse(product.id(), product.title()));
+                products.add(product.id());
+            } catch (HttpClientErrorException.NotFound ex) {
                 logger.info("Product with ID = {} doesnt exist", id);
-            }
-             catch (Exception ex) {
+            } catch (Exception ex) {
                 logger.error("Something went wrong when fetching product", ex);
             }
         }
 
-        return products;
+        this.orderRepository.save(new Order(clientId, products));
+        return response;
     }
 
     public Product createProduct(Product product) {
