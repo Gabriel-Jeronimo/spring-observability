@@ -6,6 +6,13 @@ services:
       - "8080:8080"
     networks:
       - production
+  app-b:
+    build: ./app-b
+    container_name: app-b
+    ports:
+      - "8089:8089"
+    networks:
+      - production
   prometheus:
     image: ghcr.io/gabriel-jeronimo/prom-arm64:latest
     container_name: prometheus
@@ -27,8 +34,8 @@ services:
       - 3000:3000
     restart: unless-stopped
     environment:
-      - GF_SECURITY_ADMIN_USER=${GF_ADMIN}
-      - GF_SECURITY_ADMIN_PASSWORD=${GF_PASSWORD}
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=pass
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
     networks:

@@ -1,5 +1,5 @@
 
-server.port: 8082
+server.port: 8080
 
 spring:
   application:
@@ -13,6 +13,7 @@ spring:
     show-sql: true
     hibernate.ddl-auto: create
     database-platform: org.hibernate.dialect.H2Dialect
+
 management:
   endpoints:
     web:
@@ -32,10 +33,11 @@ management:
     metrics:
       export:
         enabled: true
+        
 logging:
   level:
-    org.springframework: INFO
-    com.example.demo: DEBUG
+    '[org.springframework]': INFO
+    '[com.example.appb]': DEBUG
   pattern:
     correlation:  "[${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
   include-application-name: false
