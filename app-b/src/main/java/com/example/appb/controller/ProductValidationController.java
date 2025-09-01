@@ -1,5 +1,6 @@
 package com.example.appb.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,11 +12,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import com.example.appb.dto.DummyJsonProductResponse;
 
 @RestController
 @RequestMapping("/api")
 public class ProductValidationController {
-    private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
     private static final Logger logger = LoggerFactory.getLogger(ProductValidationController.class);
 
     @PostMapping("/validate-product")
@@ -31,7 +34,7 @@ public class ProductValidationController {
         String url = "https://dummyjson.com/products/" + idObj + "?delay=" + delay;
 
         try {
-            Object product = restTemplate.getForObject(url, Object.class);
+            DummyJsonProductResponse product = restTemplate.getForObject(url, DummyJsonProductResponse.class);
             return ResponseEntity.ok(product);
             } catch (HttpClientErrorException.NotFound ex) {
                 logger.warn("Product not found in API: {}", ex.getMessage());

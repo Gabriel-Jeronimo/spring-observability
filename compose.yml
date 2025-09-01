@@ -40,6 +40,15 @@ services:
       - ./grafana:/etc/grafana/provisioning/datasources
     networks:
       - production
+  zipkin:
+    image: ghcr.io/gabriel-jeronimo/zipkin:latest-arm64
+    container_name: zipkin
+    ports:
+      - 9411:9411
+    environment:
+      - STORAGE_TYPE=mem
+    networks:
+      - production
 
 volumes:
   prom_data:

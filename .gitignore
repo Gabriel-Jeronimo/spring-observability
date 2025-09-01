@@ -37,3 +37,8 @@ prometheus/
 host
 
 .env
+
+# A silly bypass
+/Users/t806569/Study/production-ready-homework/app-b/src/main/java/com/example/appb/config/RestTemplateConfig.java
+update_dashboard_positions.py
+.DS_STORE
